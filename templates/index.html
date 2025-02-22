@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distance and Duration Calculator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Driving Distance and Duration Calculator</h1>
+    <form id="distanceForm">
+        <label for="start">Start Destination:</label>
+        <input type="text" id="start" name="start" required>
+        <br>
+        <label for="end">End Destination:</label>
+        <input type="text" id="end" name="end" required>
+        <br>
+        <button type="submit">Calculate</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#distanceForm').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/get_distance',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.error) {
+                            $('#result').html('<p>Error: ' + response.error + '</p>');
+                        } else {
+                            $('#result').html('<p>Your drive will cover a total distance of ' + response.distance + ', taking a total time of ' + response.duration + '.</p>');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
